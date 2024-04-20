@@ -133,6 +133,44 @@ def login():
     else:
         # Failure: Incorrect credentials
         return jsonify({'error': 'Invalid username or password'}), 401
+
+@app.route('/scholar', methods=['GET'])
+def get_scholar_page():
+    user_name = request.args.get('user_name')
+    user_email = request.args.get('user_email')
+
+    # Validate that both user_name and user_email are provided
+    if not user_name and  not user_email:
+        return jsonify({'error': 'Either user_name or user_email is required'}), 400
+    
+    try:
+        # Construct the query based on provided parameters
+        query = User.query
+        if user_name:
+            query = query.filter_by(user_name=user_name)
+        if user_email:
+            query = query.filter_by(email=user_email)
+
+        # Query the user by user_id using SQLAlchemy
+        user = query.first()
+        if not user:
+            return jsonify({'error': 'User not found'}), 404
+
+        # Create a dictionary of user data
+        user_data = {
+            'status': user.status,
+            'user_name': user.user_name,
+            'user_email': user.email,
+            'user_affiliation': user.affiliation,
+            'bio': user.bio,
+            'avatar': user.avatar
+        }
+
+        return jsonify({'scholar': user_data}), 200
+
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
     
 if __name__ == '__main__':
     with app.app_context():
