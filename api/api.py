@@ -1,15 +1,16 @@
 import time
-import sqlite3
+import os 
 from flask import Flask, jsonify
+from flask_sqlalchemy import SQLAlchemy
+from model import Paper
 
+DB_FILE_PATH = 'scholarDB.sqlite'
+
+# Configure the SQLAlchemy part
 app = Flask(__name__)
-
-DB_FILE = 'scholarDB.sqlite'
-
-def get_db_connection():
-    conn = sqlite3.connect('database.db')
-    conn.row_factory = sqlite3.Row
-    return conn
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + os.path.join(os.getcwd(), DB_FILE_PATH)
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+db = SQLAlchemy(app)
 
 @app.route('/time')
 def get_current_time():
@@ -18,34 +19,28 @@ def get_current_time():
 @app.route('/papers', methods=['GET'])
 def get_papers():
     try:
-        connection = sqlite3.connect(DB_FILE)
-        cursor = connection.cursor()
-
-        # Select all papers from the 'papers' table
-        cursor.execute("SELECT * FROM papers")
-        papers_data = cursor.fetchall()
-
-        connection.close()
+        # Query all papers using SQLAlchemy
+        papers_data = Paper.query.all()
 
         # Convert papers data into a list of dictionaries
-        papers_list = []
-        for paper in papers_data:
-            paper_dict = {
-                'paper_id': paper[0],
-                'title': paper[1],
-                'topic': paper[2],
-                'abstract': paper[3],
-                'status': paper[4],
-                'submission_date': paper[5]
+        papers_list = [
+            {
+                'paper_id': paper.paper_id,
+                'title': paper.title,
+                'topic': paper.topic,
+                'abstract': paper.abstract,
+                'status': paper.status,
+                'submission_date': paper.submission_date.strftime('%Y-%m-%d')  # Formatting date
             }
-            papers_list.append(paper_dict)
+            for paper in papers_data
+        ]
 
         return jsonify({'papers': papers_list}), 200
 
-    except sqlite3.Error as e:
+    except Exception as e:  # It's a good practice to handle specific exceptions, adjust accordingly
         return jsonify({'error': str(e)}), 500
 
-    
-    
 if __name__ == '__main__':
+    with app.app_context():
+        db.create_all()  # Create database tables if not exist, should be removed in production
     app.run(debug=True)
