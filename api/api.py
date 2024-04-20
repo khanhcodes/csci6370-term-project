@@ -3,6 +3,8 @@ import os
 from flask import Flask, jsonify, request
 from werkzeug.security import generate_password_hash
 from flask_sqlalchemy import SQLAlchemy
+from datetime import date
+
 
 DB_FILE_PATH = 'scholarDB.sqlite'
 
@@ -41,6 +43,20 @@ def get_papers():
 
     except Exception as e:  # It's a good practice to handle specific exceptions, adjust accordingly
         return jsonify({'error': str(e)}), 500
+    
+@app.route('/papers', methods=['POST'])
+def create_paper():
+    data = request.get_json()
+    new_paper = Paper(
+        title=data['title'],
+        topic=data['topic'],
+        abstract=data['abstract'],
+        status=data['status'],
+        submission_date=date.today()  # Assuming submission_date is set to current date
+    )
+    db.session.add(new_paper)
+    db.session.commit()
+    return jsonify({'message': 'Paper created successfully'}), 201
 
 @app.route('/users', methods=['POST'])
 def sign_up():
