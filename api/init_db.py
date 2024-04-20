@@ -16,22 +16,22 @@ def init_db():
 
     # Insert test data into the users table
     users_data = [
-        (1, 'Kaitlyn Nguyen', 'john@example.com', 'University A', 'Bio for Kaitlyn', 'avatar1.jpg', 'Active'),
-        (2, 'Shu Peng', 'jane@example.com', 'University B', 'Bio for Shu', 'avatar2.jpg', 'Inactive')
+        (1, 'Kaitlyn Nguyen', '123', 'john@example.com', 'University A', 'Bio for Kaitlyn', 'avatar1.jpg', 'Active'),
+        (2, 'Shu Peng', '321', 'jane@example.com', 'University B', 'Bio for Shu', 'avatar2.jpg', 'Inactive')
     ]
-    cursor.executemany("INSERT INTO users (user_id, user_name, email, affiliation, bio, avatar, status) VALUES (?, ?, ?, ?, ?, ?, ?)", users_data)
+    cursor.executemany("INSERT INTO users (user_id, user_name, password, email, affiliation, bio, avatar, status) VALUES (?, ?, ?, ?, ?, ?, ?, ?)", users_data)
 
     # Insert test data into the papers table
     papers_data = [
-        (1, 'Paper 1', 'Topic A', 'Abstract for Paper 1', 'Submitted', '2024-04-20'),
-        (2, 'Paper 2', 'Topic B', 'Abstract for Paper 2', 'Under Review', '2024-04-21')
+        (3, 'Paper 1', 'Topic A', 'Abstract for Paper 1', 'Submitted', '2024-04-20'),
+        (4, 'Paper 2', 'Topic B', 'Abstract for Paper 2', 'Under Review', '2024-04-21')
     ]
     cursor.executemany("INSERT INTO papers (paper_id, title, topic, abstract, status, submission_date) VALUES (?, ?, ?, ?, ?, ?)", papers_data)
 
     # Insert test data into the authorship table
     authorship_data = [
-        (1, 1),  
-        (2, 2)   
+        (5, 6),  
+        (3, 4)   
     ]
     cursor.executemany("INSERT INTO authorship (user_id, paper_id) VALUES (?, ?)", authorship_data)
 
@@ -70,8 +70,8 @@ def print_papers_table():
         print("No data found in 'papers' table.")
 
 if __name__ == '__main__':
-    # init_db()
-    # print("Database initialized successfully.")
+    init_db()
+    print("Database initialized successfully.")
 
     table_name = 'papers'
     exists = check_table_existence(table_name)

@@ -7,6 +7,7 @@ class User(db.Model):
     __tablename__ = 'users'
     user_id = db.Column(db.Integer, primary_key=True)
     user_name = db.Column(db.String(255), unique=True, nullable=False)
+    password = db.Column(db.String(255))
     email = db.Column(db.String(255), unique=True, nullable=False)
     affiliation = db.Column(db.String(255))
     bio = db.Column(db.Text)
@@ -18,6 +19,9 @@ class User(db.Model):
 
     def get_user_name(self):
         return self.user_name
+    
+    def get_password(self):
+        return self.password
 
     def get_email(self):
         return self.email
