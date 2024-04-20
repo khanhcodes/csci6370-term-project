@@ -16,22 +16,22 @@ def init_db():
 
     # Insert test data into the users table
     users_data = [
-        (1, 'Kaitlyn Nguyen', '123', 'john@example.com', 'University A', 'Bio for Kaitlyn', 'avatar1.jpg', 'Active'),
-        (2, 'Shu Peng', '321', 'jane@example.com', 'University B', 'Bio for Shu', 'avatar2.jpg', 'Inactive')
+        (3, 'Kaitlyn Nguyen', 'dumb', 'john@example.com', 'University A', 'Bio for Kaitlyn', 'avatar1.jpg', 'Active'),
+        (4, 'Shu Peng', 'hellohello', 'jane@example.com', 'University B', 'Bio for Shu', 'avatar2.jpg', 'Inactive')
     ]
     cursor.executemany("INSERT INTO users (user_id, user_name, password, email, affiliation, bio, avatar, status) VALUES (?, ?, ?, ?, ?, ?, ?, ?)", users_data)
 
     # Insert test data into the papers table
     papers_data = [
-        (3, 'Paper 1', 'Topic A', 'Abstract for Paper 1', 'Submitted', '2024-04-20'),
-        (4, 'Paper 2', 'Topic B', 'Abstract for Paper 2', 'Under Review', '2024-04-21')
+        (5, 'Paper 1', 'Topic A', 'Abstract for Paper 1', 'Submitted', '2024-04-20'),
+        (6, 'Paper 2', 'Topic B', 'Abstract for Paper 2', 'Under Review', '2024-04-21')
     ]
     cursor.executemany("INSERT INTO papers (paper_id, title, topic, abstract, status, submission_date) VALUES (?, ?, ?, ?, ?, ?)", papers_data)
 
     # Insert test data into the authorship table
     authorship_data = [
-        (5, 6),  
-        (3, 4)   
+        (7, 8),  
+        (10, 11)   
     ]
     cursor.executemany("INSERT INTO authorship (user_id, paper_id) VALUES (?, ?)", authorship_data)
 
