@@ -1,7 +1,7 @@
 import time
 import os 
 from flask import Flask, jsonify, request
-from werkzeug.security import generate_password_hash
+from werkzeug.security import generate_password_hash, check_password_hash
 from flask_sqlalchemy import SQLAlchemy
 from datetime import date
 
@@ -61,18 +61,14 @@ def create_paper():
 @app.route('/users', methods=['POST'])
 def sign_up():
     data = request.get_json()
-    data = {
-        "user_name":"peng shu",
-        "user_email":"aaa@uga.edu",
-        "user_id": 0,
-        "password": "1234"
-    }
 
     # Basic validation to check if all fields are provided
     if not data:
         return jsonify({'error': 'No data provided'}), 400
+    
     required_fields = ['user_name', 'password', 'user_email']
     missing_fields = [field for field in required_fields if field not in data]
+
     if missing_fields:
         return jsonify({'error': 'Missing data, fields required: ' + ', '.join(missing_fields)}), 400
 
@@ -80,6 +76,7 @@ def sign_up():
     existing_user = User.query.filter_by(user_name=data['user_name']).first()
     if existing_user is not None:
         return jsonify({'error': 'Username already exists'}), 409
+    
     existing_email = User.query.filter_by(email=data['user_email']).first()
     if existing_email is not None:
         return jsonify({'error': 'Email already exists'}), 409
@@ -137,6 +134,36 @@ def follow_user():
     db.session.commit()
 
     return jsonify({'message': 'Follow relationship created successfully'}), 201
+    
+@app.route('/login', methods=['POST'])
+def login():
+    data = request.get_json()
+
+    # Basic validation to check if all fields are provided
+    if not data:
+        return jsonify({'error': 'No data provided'}), 400
+    
+    required_fields = ['username', 'userpwd']
+    missing_fields = [field for field in required_fields if field not in data]
+
+    if missing_fields:
+        return jsonify({'error': 'Missing data, fields required: ' + ', '.join(missing_fields)}), 400
+    
+    user_name  = data['username']
+    password = data['userpwd']
+
+    # More validation can be added here (e.g., check for empty strings)
+    if user_name == "" or password == "":
+        return jsonify({'error': 'Username and password cannot be empty'}), 400
+
+    # Check if the user exists and the password is correct
+    user = User.query.filter_by(user_name=user_name).first()
+    if user and check_password_hash(user.password, password):
+        # Success: Perform login (create session, return success message, etc.)
+        return jsonify({'message': 'Login successful'}), 200
+    else:
+        # Failure: Incorrect credentials
+        return jsonify({'error': 'Invalid username or password'}), 401
     
 if __name__ == '__main__':
     with app.app_context():
