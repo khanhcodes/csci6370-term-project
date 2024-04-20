@@ -1,16 +1,16 @@
 import time
+import os 
 from flask import Flask, jsonify
 from flask_sqlalchemy import SQLAlchemy
+from model import Paper
 
-# DB_FILE = 'scholarDB.sqlite'
+DB_FILE_PATH = 'scholarDB.sqlite'
 
 # Configure the SQLAlchemy part
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///scholarDB.sqlite'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + os.path.join(os.getcwd(), DB_FILE_PATH)
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
-
-from model import Paper
 
 @app.route('/time')
 def get_current_time():

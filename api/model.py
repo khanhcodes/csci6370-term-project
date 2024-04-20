@@ -2,6 +2,7 @@ from api import db
 
 # DB_FILE = 'scholarDB.sqlite'
 
+
 class Users(db.Model):
     user_id = db.Column(db.Integer, primary_key=True)
     user_name = db.Column(db.String(255), unique=True, nullable=False)
@@ -33,6 +34,8 @@ class Users(db.Model):
         return self.status 
 
 class Paper(db.Model):
+    __tablename__ = 'papers'
+
     paper_id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(255))
     topic = db.Column(db.String(255))
