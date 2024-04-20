@@ -1,6 +1,6 @@
-from api.api import db
+from api import db
 
-DB_FILE = 'scholarDB.sqlite'
+# DB_FILE = 'scholarDB.sqlite'
 
 class Users(db.Model):
     user_id = db.Column(db.Integer, primary_key=True)
