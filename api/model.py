@@ -3,7 +3,8 @@ from api import db
 # DB_FILE = 'scholarDB.sqlite'
 
 
-class Users(db.Model):
+class User(db.Model):
+    __tablename__ = 'users'
     user_id = db.Column(db.Integer, primary_key=True)
     user_name = db.Column(db.String(255), unique=True, nullable=False)
     email = db.Column(db.String(255), unique=True, nullable=False)
@@ -35,7 +36,6 @@ class Users(db.Model):
 
 class Paper(db.Model):
     __tablename__ = 'papers'
-
     paper_id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(255))
     topic = db.Column(db.String(255))
@@ -62,6 +62,7 @@ class Paper(db.Model):
         return self.submission_date
 
 class Authorship(db.Model):
+    __tablename__ = 'authorship'
     user_id = db.Column(db.Integer, db.ForeignKey('users.user_id'), primary_key=True)
     paper_id = db.Column(db.Integer, db.ForeignKey('papers.paper_id'), primary_key=True)
 
@@ -72,6 +73,7 @@ class Authorship(db.Model):
         return self.paper_id
 
 class PaperList(db.Model):
+    __tablename__ = 'paper_lists'
     list_id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('users.user_id'))
     list_name = db.Column(db.String(255))
@@ -86,6 +88,7 @@ class PaperList(db.Model):
         return self.list_name
 
 class PaperListContent(db.Model):
+    __tablename__ = 'paper_list_contents'
     list_id = db.Column(db.Integer, db.ForeignKey('paper_lists.list_id'), primary_key=True)
     paper_id = db.Column(db.Integer, db.ForeignKey('papers.paper_id'), primary_key=True)
 
@@ -96,6 +99,7 @@ class PaperListContent(db.Model):
         return self.paper_id
     
 class Follow(db.Model):
+    __tablename__ = 'follows'
     follower_id = db.Column(db.Integer, db.ForeignKey('users.user_id'), primary_key=True)
     followed_id = db.Column(db.Integer, db.ForeignKey('users.user_id'), primary_key=True)
 
@@ -106,6 +110,7 @@ class Follow(db.Model):
         return self.followed_id
 
 class Comment(db.Model):
+    __tablename__ = 'comments'
     comment_id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('users.user_id'))
     paper_id = db.Column(db.Integer, db.ForeignKey('papers.paper_id'))
