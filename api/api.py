@@ -14,7 +14,7 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + os.path.join(os.getcwd(),
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 
-from model import Paper, User, Authorship
+from model import Paper, User, Authorship, Follow
 
 @app.route('/time')
 def get_current_time():
@@ -145,6 +145,37 @@ def sign_up():
     except Exception as e:
         db.session.rollback()
         return jsonify({'error': str(e)}), 500
+
+# Endpoint to create a follow relationship between users
+@app.route('/follow', methods=['POST'])
+def follow_user():
+    data = request.get_json()
+    follower_id = data.get('follower_id')
+    followed_id = data.get('followed_id')
+
+    if not follower_id or not followed_id:
+        return jsonify({'error': 'Both follower_id and followed_id are required'}), 400
+
+    # Check if both users exist in the database
+    follower = User.query.get(follower_id)
+    if not follower:
+        return jsonify({'error': 'Follower not found'}), 404
+
+    user_to_follow = User.query.get(followed_id)
+    if not user_to_follow:
+        return jsonify({'error': 'User to follow not found'}), 404
+
+    # Check if the follow relationship already exists
+    existing_follow = Follow.query.filter_by(follower_id=follower_id, followed_id=followed_id).first()
+    if existing_follow:
+        return jsonify({'message': 'Follow relationship already exists'}), 200
+
+    # Create a new follow relationship in the database
+    new_follow = Follow(follower_id=follower_id, followed_id=followed_id)
+    db.session.add(new_follow)
+    db.session.commit()
+
+    return jsonify({'message': 'Follow relationship created successfully'}), 201
     
 @app.route('/login', methods=['POST'])
 def login():

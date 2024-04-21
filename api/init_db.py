@@ -17,8 +17,8 @@ def init_db():
 
     # Insert test data into the users table
     users_data = [
-        (1, 'Kaitlyn Nguyen', '123', 'john@example.com', 'University A', 'Bio for Kaitlyn', 'avatar1.jpg', 'Active'),
-        (2, 'Shu Peng', '321', 'jane@example.com', 'University B', 'Bio for Shu', 'avatar2.jpg', 'Inactive')
+        (3, 'Kaitlyn Nguyen', 'dumb', 'john@example.com', 'University A', 'Bio for Kaitlyn', 'avatar1.jpg', 'Active'),
+        (4, 'Shu Peng', 'hellohello', 'jane@example.com', 'University B', 'Bio for Shu', 'avatar2.jpg', 'Inactive')
     ]
     cursor.executemany("INSERT INTO users (user_id, user_name, password, email, affiliation, bio, avatar, status) VALUES (?, ?, ?, ?, ?, ?, ?, ?)", users_data)
 
