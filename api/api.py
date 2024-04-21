@@ -14,14 +14,56 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + os.path.join(os.getcwd(),
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 
-from model import Paper, User, Follow
+from model import Paper, User, Authorship, Follow
 
 @app.route('/time')
 def get_current_time():
     return {'time': time.time()}
 
-@app.route('/papers', methods=['GET'])
-def get_papers():
+@app.route('/getpaper', methods=['GET'])
+def get_paper():
+    title = request.args.get('paper_name')
+
+    # Validate that both user_name and user_email are provided
+    if not title:
+        return jsonify({'error': 'Title is required'}), 400
+    
+    try:
+        paper = Paper.query.filter_by(title=title).first()
+        if not paper:
+            return jsonify({'error': 'Paper not found'}), 404
+        
+        # Fetch the authors for the paper
+        authorships = Authorship.query.filter_by(paper_id=paper.paper_id).all()
+        author_names = []
+        affiliations = []
+        for authorship in authorships:
+            author = User.query.filter_by(user_id=authorship.user_id).first()
+            if author:
+                author_names.append(author.user_name)
+                if author.affiliation not in affiliations:
+                    affiliations.append(author.affiliation)
+
+        paper_data = {
+            'status': paper.status,
+            'paper': {
+                'title': paper.title,
+                'abstract': paper.abstract,
+                'author': {
+                    'author_name': author_names,
+                    'affiliations': affiliations,
+                },
+                'topic': paper.topic
+            }
+        }
+
+        return jsonify(paper_data), 200
+
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+    
+@app.route('/getpaperlist', methods=['GET'])
+def get_paperlist():
     try:
         # Query all papers using SQLAlchemy
         papers_data = Paper.query.all()

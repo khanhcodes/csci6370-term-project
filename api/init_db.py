@@ -1,5 +1,6 @@
 import sqlite3
 
+
 # Define the path to your SQLite database file
 DB_FILE = 'scholarDB.sqlite'
 SCHEMA_FILE = 'schema.sql'
@@ -23,15 +24,29 @@ def init_db():
 
     # Insert test data into the papers table
     papers_data = [
-        (5, 'Paper 1', 'Topic A', 'Abstract for Paper 1', 'Submitted', '2024-04-20'),
-        (6, 'Paper 2', 'Topic B', 'Abstract for Paper 2', 'Under Review', '2024-04-21')
+        (3, 'Paper_1', 'Topic A', 'Abstract for Paper 1', 'Submitted', '2024-04-20', 'https://www.youtube.com/',
+       r"""@article{vaswani2017attention,
+    title={Attention is all you need},
+    author={Vaswani, Ashish and Shazeer, Noam and Parmar, Niki and Uszkoreit, Jakob and Jones, Llion and Gomez, Aidan N and Kaiser, {\L}ukasz and Polosukhin, Illia},
+    journal={Advances in neural information processing systems},
+    volume={30},
+    year={2017}
+    }""", 'https://proceedings.neurips.cc/paper/2017/file/3f5ee243547dee91fbd053c1c4a845aa-Paper.pdf'),
+
+        (4, 'Paper_2', 'Topic B', 'Abstract for Paper 2', 'Under Review', '2024-04-21', 'https://www.youtube.com/watch?v=vFqTzBj575Y',
+        r"""@article{koroteev2021bert,
+    title={BERT: a review of applications in natural language processing and understanding},
+    author={Koroteev, MV},
+    journal={arXiv preprint arXiv:2103.11943},
+    year={2021}
+    }""", 'https://arxiv.org/ftp/arxiv/papers/2103/2103.11943.pdf')
     ]
-    cursor.executemany("INSERT INTO papers (paper_id, title, topic, abstract, status, submission_date) VALUES (?, ?, ?, ?, ?, ?)", papers_data)
+    cursor.executemany("INSERT INTO papers (paper_id, title, topic, abstract, status, submission_date, video_url, bibtex, pdf_url) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)", papers_data)
 
     # Insert test data into the authorship table
     authorship_data = [
-        (7, 8),  
-        (10, 11)   
+        (1, 3),  
+        (2, 4)   
     ]
     cursor.executemany("INSERT INTO authorship (user_id, paper_id) VALUES (?, ?)", authorship_data)
 
