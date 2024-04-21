@@ -1,4 +1,6 @@
 DROP TABLE users;
+DROP TABLE papers;
+DROP TABLE authorship;
 
 -- Create User Table
 CREATE TABLE IF NOT EXISTS users (
@@ -19,7 +21,10 @@ CREATE TABLE IF NOT EXISTS papers (
     topic VARCHAR(255),
     abstract TEXT,
     status VARCHAR(255),
-    submission_date DATE
+    submission_date DATE,
+    video_url VARCHAR(255),
+    bibtex VARCHAR(255),
+    pdf_url VARCHAR(255)
 );
 
 -- Create Authorship Table

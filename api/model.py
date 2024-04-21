@@ -46,6 +46,9 @@ class Paper(db.Model):
     abstract = db.Column(db.Text)
     status = db.Column(db.String(255))
     submission_date = db.Column(db.Date)
+    video_url = db.Column(db.String(255))
+    bibtex = db.Column(db.String(255))
+    pdf_url = db.Column(db.String(255))
 
     def get_paper_id(self):
         return self.paper_id
@@ -64,6 +67,15 @@ class Paper(db.Model):
 
     def get_submission_date(self):
         return self.submission_date
+    
+    def get_video_url(self):
+        return self.video_url
+    
+    def get_bibtex(self):
+        return self.bibtex
+    
+    def get_pdf_url(self):
+        return self.pdf_url
 
 class Authorship(db.Model):
     __tablename__ = 'authorship'
