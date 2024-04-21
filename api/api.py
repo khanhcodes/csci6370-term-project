@@ -86,7 +86,7 @@ def get_paperlist():
     except Exception as e:  # It's a good practice to handle specific exceptions, adjust accordingly
         return jsonify({'error': str(e)}), 500
     
-@app.route('/papers', methods=['POST'])
+@app.route('/upload_paper', methods=['POST'])
 def create_paper():
     data = request.get_json()
     new_paper = Paper(
@@ -100,7 +100,7 @@ def create_paper():
     db.session.commit()
     return jsonify({'message': 'Paper created successfully'}), 201
 
-@app.route('/users', methods=['POST'])
+@app.route('/signup', methods=['POST'])
 def sign_up():
     data = request.get_json()
 
