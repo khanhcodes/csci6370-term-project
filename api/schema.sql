@@ -1,6 +1,10 @@
 DROP TABLE users;
 DROP TABLE papers;
 DROP TABLE authorship;
+DROP TABLE paper_lists;
+DROP TABLE paper_list_contents;
+DROP TABLE follows;
+DROP TABLE comments;
 
 -- Create User Table
 CREATE TABLE IF NOT EXISTS users (
